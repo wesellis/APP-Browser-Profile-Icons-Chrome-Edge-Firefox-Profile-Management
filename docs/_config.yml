@@ -1,0 +1,22 @@
+name: ProfilePop - Browser Profile Icon Generator
+description: Generate custom colored icons with browser logos for your Edge, Firefox, and Chrome browser profiles
+url: https://wesellis.github.io/ProfilePop
+baseurl: /ProfilePop
+author: wesellis
+repository: wesellis/ProfilePop
+
+# GitHub Pages configuration
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+
+# SEO settings
+lang: en
+title: ProfilePop - Browser Profile Icon Generator
+tagline: Organize your browser profiles with custom icons
+
+# Social media
+social:
+  name: ProfilePop
+  links:
+    - https://github.com/wesellis/ProfilePop
