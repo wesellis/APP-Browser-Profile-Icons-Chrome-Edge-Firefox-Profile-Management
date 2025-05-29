@@ -1,0 +1,60 @@
+# Build directories
+build/
+dist/
+*.spec
+
+# Release files (upload to GitHub Releases instead)
+releases/
+*.exe
+ProfilePop-v*.exe
+
+# Generated icon files
+app_icon.ico
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Generated icons (user-specific)
+icons/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
