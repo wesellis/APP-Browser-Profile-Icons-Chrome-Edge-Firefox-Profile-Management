@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Browser Profile Icons Pro</title>
+  <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Profile Icons</h1>
+    <button id="settings" class="icon-btn" title="Settings">⚙️</button>
+  </div>
+
+  <div class="profiles" id="profiles">
+    <!-- Profiles will be loaded here -->
+  </div>
+
+  <div class="free-limit" id="freeLimit" style="display:none;">
+    <p>Free version limited to 5 profiles</p>
+    <button id="upgradePro" class="upgrade-btn">Upgrade to Pro - $4.99</button>
+  </div>
+
+  <div class="actions">
+    <button id="addProfile" class="action-btn">+ Add Profile</button>
+    <button id="syncProfiles" class="action-btn pro-feature" disabled>☁️ Sync</button>
+  </div>
+
+  <div class="footer">
+    <span id="profileCount">0/5 profiles</span>
+    <span class="version">v2.0.0</span>
+  </div>
+
+  <script src="js/popup.js"></script>
+</body>
+</html>

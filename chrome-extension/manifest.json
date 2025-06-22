@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "Browser Profile Icons Pro",
+  "version": "2.0.0",
+  "description": "Customize browser profile icons with themes, sync, and advanced features",
+  "author": "Wesley Ellis",
+  "homepage_url": "https://github.com/wesellis/browser-profile-icons",
+  
+  "permissions": [
+    "storage",
+    "tabs",
+    "identity",
+    "management"
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  
+  "options_page": "options.html",
+  
+  "content_scripts": [{
+    "matches": ["chrome://newtab/"],
+    "js": ["js/content.js"],
+    "run_at": "document_start"
+  }],
+  
+  "web_accessible_resources": [{
+    "resources": ["images/*", "css/*"],
+    "matches": ["<all_urls>"]
+  }],
+  
+  "commands": {
+    "switch-profile-1": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1"
+      },
+      "description": "Switch to Profile 1"
+    },
+    "switch-profile-2": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2"
+      },
+      "description": "Switch to Profile 2"
+    }
+  }
+}
