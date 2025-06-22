@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Browser Profile Icons - Settings</title>
+    <link rel="stylesheet" href="css/options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Browser Profile Icons Settings</h1>
+            <div class="license-status" id="license-status"></div>
+        </header>
+        
+        <nav class="tabs">
+            <button class="tab active" data-tab="profiles">Profiles</button>
+            <button class="tab" data-tab="settings">Settings</button>
+            <button class="tab" data-tab="backup">Backup & Sync</button>
+            <button class="tab" data-tab="about">About</button>
+        </nav>
+        
+        <div class="tab-content active" id="profiles-tab">
+            <h2>Manage Profiles</h2>
+            <div class="profile-grid" id="profile-grid">
+                <!-- Profiles will be loaded here -->
+            </div>
+            <button class="btn btn-primary" id="add-profile-btn">
+                <span class="icon">+</span> Add New Profile
+            </button>
+        </div>
+        
+        <div class="tab-content" id="settings-tab">
+            <h2>General Settings</h2>
+            <div class="settings-group">
+                <label>
+                    <input type="checkbox" id="show-notifications">
+                    Show notifications when switching profiles
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="enable-shortcuts">
+                    Enable keyboard shortcuts (Pro)
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="auto-switch">
+                    Auto-switch profiles based on website (Pro)
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="sync-enabled">
+                    Enable cloud sync (Pro)
+                </label>
+            </div>
+            
+            <h3>Appearance</h3>
+            <div class="settings-group">
+                <label>
+                    Theme:
+                    <select id="theme-select">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="system">System</option>
+                    </select>
+                </label>
+                
+                <label>
+                    Icon style:
+                    <select id="icon-style">
+                        <option value="initials">Initials</option>
+                        <option value="emoji">Emoji</option>
+                        <option value="custom">Custom (Pro)</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="backup-tab">
+            <h2>Backup & Sync</h2>
+            <div class="pro-feature-notice" id="pro-notice">
+                <h3>Pro Feature</h3>
+                <p>Cloud sync and backup features require Pro version</p>
+                <button class="btn btn-upgrade" id="upgrade-backup">Upgrade to Pro</button>
+            </div>
+            
+            <div class="backup-section" id="backup-section" style="display:none;">
+                <h3>Export Profiles</h3>
+                <p>Download a backup of all your profiles</p>
+                <button class="btn" id="export-profiles">Export to JSON</button>
+                
+                <h3>Import Profiles</h3>
+                <p>Restore profiles from a backup file</p>
+                <input type="file" id="import-file" accept=".json">
+                
+                <h3>Cloud Sync</h3>
+                <p>Automatically sync profiles across devices</p>
+                <div class="sync-status" id="sync-status">
+                    <span class="status-icon">☁️</span>
+                    <span class="status-text">Not synced</span>
+                </div>
+                <button class="btn" id="sync-now">Sync Now</button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="about-tab">
+            <h2>About Browser Profile Icons</h2>
+            <div class="about-info">
+                <p><strong>Version:</strong> 2.0.0</p>
+                <p><strong>Developer:</strong> Wesley Ellis</p>
+                <p><strong>License:</strong> <span id="license-type">Free</span></p>
+                
+                <h3>Free vs Pro</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th>Pro</th>
+                    </tr>
+                    <tr>
+                        <td>Number of profiles</td>
+                        <td>5</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Basic profile switching</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Keyboard shortcuts</td>
+                        <td>1 profile</td>
+                        <td>All profiles</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud sync</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Custom icons</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Export/Import</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Priority support</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                    </tr>
+                </table>
+                
+                <div class="upgrade-cta">
+                    <button class="btn btn-upgrade btn-large" id="upgrade-about">
+                        Upgrade to Pro - $4.99
+                    </button>
+                    <p class="small">One-time purchase • Lifetime updates</p>
+                </div>
+                
+                <h3>Support</h3>
+                <p>
+                    <a href="https://github.com/wesellis/browser-profile-icons/issues">Report an issue</a> |
+                    <a href="mailto:support@browserprofileicons.com">Email support</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Edit Modal -->
+    <div class="modal" id="profile-modal" style="display:none;">
+        <div class="modal-content">
+            <h2 id="modal-title">New Profile</h2>
+            <form id="profile-form">
+                <label>
+                    Profile Name:
+                    <input type="text" id="profile-name" required maxlength="30">
+                </label>
+                
+                <label>
+                    Color:
+                    <input type="color" id="profile-color" value="#4285f4">
+                </label>
+                
+                <label>
+                    Icon (Pro):
+                    <select id="profile-icon" disabled>
+                        <option value="initials">Use initials</option>
+                        <option value="emoji">Use emoji</option>
+                        <option value="custom">Upload custom</option>
+                    </select>
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="profile-default">
+                    Set as default profile
+                </label>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="js/options.js"></script>
+</body>
+</html>

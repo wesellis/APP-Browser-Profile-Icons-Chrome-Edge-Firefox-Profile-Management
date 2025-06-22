@@ -1,0 +1,20 @@
+
+PROMOTIONAL IMAGES NEEDED
+========================
+
+1. Small Promo Tile (440x280)
+   - Extension icon prominently displayed
+   - Tagline: "Smart Browser Profile Management"
+   - Show 3-4 colorful profile icons
+   - "$4.99 Pro Version" badge
+
+2. Large Promo Tile (920x680) - Optional
+   - Hero image showing multiple profiles
+   - Feature list on the side
+   - Professional, clean design
+   - Call-to-action: "Try 7-Day Free Trial"
+
+3. Marquee Promo (1400x560) - Optional
+   - Wide banner showcasing the extension
+   - Before/after comparison
+   - "Organize Your Digital Life" message
