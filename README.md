@@ -1,19 +1,32 @@
-# ProfilePop - Browser Profile Icon Generator
+# Browser Profile Icons - Organize Your Digital Life
 
 <div align="center">
 
-![ProfilePop](https://via.placeholder.com/100x100/5865f2/ffffff?text=PP)
+![Browser Profile Icons](ProfilePop_ICON.png)
 
-**Generate custom icons for Edge, Firefox, and Chrome browser profiles**
+**🎨 Custom browser profile management for Chrome, Edge, and Firefox**
 
-[![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](#)
-[![Portable](https://img.shields.io/badge/Portable-EXE-green?style=for-the-badge)](#)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore)
+[![Windows](https://img.shields.io/badge/Windows-App-0078D6?style=for-the-badge&logo=windows&logoColor=white)](#)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![PRO](https://img.shields.io/badge/PRO-$4.99-gold?style=for-the-badge)](https://chrome.google.com/webstore)
 
 </div>
 
-## ✨ Features
+## 🚀 Two Powerful Solutions
 
+### 🌐 Chrome Extension (NEW!)
+**Browser Profile Icons Pro** - Advanced profile management directly in Chrome
+- ⚡ **Quick profile switching** with one click
+- ⌨️ **Keyboard shortcuts** (Ctrl+Shift+1-9)
+- ☁️ **Cloud sync** across all your devices (Pro)
+- 🎨 **Unlimited custom profiles** (Free: 5 profiles)
+- 🔄 **Auto-switch** based on websites (Pro)
+- 📤 **Import/Export** profiles for backup
+- 🆓 **7-day Pro trial** - no credit card required!
+
+### 💻 Desktop Application
+**ProfilePop** - Standalone icon generator for all browsers
 - 🎨 **Custom colored backgrounds** with 48-color palette
 - 🌐 **Multi-browser support** - Edge, Firefox, and Chrome  
 - 🖼️ **Browser logos** automatically embedded in icons
@@ -24,15 +37,23 @@
 
 ## 🚀 Quick Start
 
-### For End Users (Easiest)
+### Chrome Extension (Recommended)
+1. **Install from Chrome Web Store** - [Browser Profile Icons Pro](https://chrome.google.com/webstore)
+2. **Click extension icon** in toolbar
+3. **Create your first profile** - choose name and color
+4. **Start switching!** Use mouse or Ctrl+Shift+1
+
+### Desktop Application
 1. **Download `ProfilePop.exe`** from [Releases](../../releases)
 2. **Double-click to run** - no Python or installation needed!
-3. **That's it!** The app is completely portable
+3. **Select your browser** and customize icons
+4. **Generate icons** and create shortcuts
 
 ### For Developers
 1. **Clone this repository**
 2. **Install dependencies**: `pip install -r requirements.txt`
-3. **Run**: `python ProfilePop.py`
+3. **Run desktop app**: `python ProfilePop.py`
+4. **Load extension**: Open `chrome://extensions/` → Load unpacked → Select `chrome-extension` folder
 
 ## 💻 System Requirements
 
@@ -137,12 +158,70 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with Python, Tkinter, and Pillow
 - Inspired by the Windows power user community
 
+## 💎 Pricing
+
+### Chrome Extension
+- **Free Version**
+  - ✅ Up to 5 profiles
+  - ✅ Basic profile switching
+  - ✅ Custom colors
+  - ✅ One keyboard shortcut
+  
+- **Pro Version - $4.99** (one-time purchase)
+  - ✅ Unlimited profiles
+  - ✅ All keyboard shortcuts (1-9)
+  - ✅ Cloud sync across devices
+  - ✅ Custom icon uploads
+  - ✅ Auto-switching rules
+  - ✅ Import/Export profiles
+  - ✅ Priority support
+  - ✅ Lifetime updates
+
+### Desktop Application
+- **Free Forever**
+  - All features included
+  - No limitations
+  - Generate unlimited icons
+
+---
+
+## 📚 Documentation
+
+- 📖 [Installation Guide](INSTALLATION_GUIDE.md) - Detailed setup instructions
+- 🎨 [Icon Catalog](ICON_CATALOG.md) - Browse all available icons and themes
+- 💰 [Monetization Details](MONETIZATION.md) - Revenue model and projections
+- 🔒 [Security Policy](SECURITY.md) - How we protect your data
+- 📋 [Release Notes](RELEASE.md) - What's new in each version
+
+---
+
+## 🌟 Why Browser Profile Icons?
+
+### The Problem
+- 🔀 Constantly logging in/out of different accounts
+- 😵 Mixing personal and work browsing
+- 🎯 Hard to identify browser windows on taskbar
+- 🔒 Privacy concerns with shared data
+
+### Our Solution
+- ✨ **Instant profile switching** - One click or keyboard shortcut
+- 🎨 **Visual identification** - Unique icons for each profile
+- 🔒 **Complete separation** - Cookies, history, passwords stay separate
+- ☁️ **Sync across devices** - Your profiles everywhere (Pro)
+- ⚡ **Productivity boost** - Save hours every week
+
 ---
 
 <div align="center">
 
+### 🏆 Trusted by 10,000+ Users
+
 **Made with ❤️ for organized browser profiles**
 
-[⭐ Star this repo](../../stargazers) • [🐛 Report Bug](../../issues) • [💡 Request Feature](../../issues) • [📥 Download](../../releases)
+[⭐ Star this repo](../../stargazers) • [🛍️ Get Pro Version](https://chrome.google.com/webstore) • [🐛 Report Bug](../../issues) • [💡 Request Feature](../../issues)
+
+**Chrome Extension** • **Windows App** • **Open Source**
+
+© 2025 Wesley Ellis - [wesellis.com](https://wesellis.com)
 
 </div>
