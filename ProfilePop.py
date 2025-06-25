@@ -6,6 +6,16 @@ from PIL import Image, ImageDraw
 import threading
 import subprocess
 import configparser
+from functools import lru_cache
+import io
+
+# Performance optimization imports
+try:
+    from PIL import ImageFont
+    _font_cache = {}
+except ImportError:
+    ImageFont = None
+    _font_cache = {}
 
 # Version info
 __version__ = "1.2.0"
@@ -23,6 +33,10 @@ class ProfilePop:
         self.profile_colors = {}
         self.current_browser = None
         
+        # Cache for loaded images and fonts
+        self._image_cache = {}
+        self._font_cache = {}
+        
         # Your custom color palette - organized dark to light (white to black)
         self.color_palette = [
             '#10121c', '#2c1e31', '#6b2643', '#ac2847', '#ec273f',
@@ -37,6 +51,49 @@ class ProfilePop:
         ]
         
         self.setup_ui()
+        
+    @lru_cache(maxsize=32)
+    def _load_json_file(self, file_path):
+        """Cached JSON file loading for better performance"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            raise Exception(f"Failed to load {file_path}: {str(e)}")
+    
+    def _get_cached_image(self, image_path):
+        """Load and cache images for better performance"""
+        if image_path in self._image_cache:
+            return self._image_cache[image_path]
+        
+        try:
+            if os.path.exists(image_path):
+                img = Image.open(image_path).convert('RGBA')
+                self._image_cache[image_path] = img
+                return img
+        except Exception as e:
+            print(f"Failed to load image {image_path}: {e}")
+        
+        return None
+    
+    def _get_cached_font(self, font_path, size):
+        """Load and cache fonts for better performance"""
+        cache_key = f"{font_path}_{size}"
+        if cache_key in self._font_cache:
+            return self._font_cache[cache_key]
+        
+        try:
+            if ImageFont:
+                if os.path.exists(font_path):
+                    font = ImageFont.truetype(font_path, size)
+                else:
+                    font = ImageFont.load_default()
+                self._font_cache[cache_key] = font
+                return font
+        except Exception:
+            pass
+        
+        return ImageFont.load_default() if ImageFont else None
         
     def setup_ui(self):
         self.root.title(f"{__app_name__} v{__version__} - {__description__}")
@@ -234,8 +291,8 @@ class ProfilePop:
             if not os.path.exists(local_state_path):
                 raise Exception("Edge data not found")
                 
-            with open(local_state_path, 'r', encoding='utf-8') as f:
-                local_state = json.load(f)
+            # Use cached JSON loading
+            local_state = self._load_json_file(local_state_path)
                 
             profile_info = local_state.get('profile', {}).get('info_cache', {})
             
@@ -299,8 +356,8 @@ class ProfilePop:
             if not os.path.exists(local_state_path):
                 raise Exception("Chrome data not found")
                 
-            with open(local_state_path, 'r', encoding='utf-8') as f:
-                local_state = json.load(f)
+            # Use cached JSON loading
+            local_state = self._load_json_file(local_state_path)
                 
             profile_info = local_state.get('profile', {}).get('info_cache', {})
             
@@ -361,16 +418,16 @@ class ProfilePop:
             appdata_path = os.path.expanduser("~\AppData\Local\ProfilePop")
             icons_folder = os.path.join(appdata_path, "icons")
             
-            # Try to clear the icons folder
+            # Batch delete old icons for better performance
             import shutil
             if os.path.exists(icons_folder):
                 try:
-                    # Delete individual files instead of the whole folder
-                    for filename in os.listdir(icons_folder):
-                        if filename.endswith('.ico'):
-                            file_path = os.path.join(icons_folder, filename)
-                            os.remove(file_path)
-                            print(f"🗑️ Deleted old icon: {filename}")
+                    # Get list of all .ico files first, then delete in batch
+                    ico_files = [f for f in os.listdir(icons_folder) if f.endswith('.ico')]
+                    for filename in ico_files:
+                        file_path = os.path.join(icons_folder, filename)
+                        os.remove(file_path)
+                    print(f"🗑️ Batch deleted {len(ico_files)} old icons")
                 except Exception as e:
                     print(f"⚠️ Could not delete some files: {e}")
             
@@ -378,22 +435,28 @@ class ProfilePop:
             os.makedirs(icons_folder, exist_ok=True)
             print(f"📁 Icons folder ready: {icons_folder}")
             
-            # Wait a moment for filesystem
+            # Reduced wait time for better responsiveness
             import time
-            time.sleep(1)
+            time.sleep(0.5)
             
             # Generate each icon with unique names including browser and timestamp
             import datetime
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             
-            for profile in self.profiles:
-                print(f"\n🎯 GENERATING: {profile['name']}")
+            # Process in smaller batches for better responsiveness
+            for i, profile in enumerate(self.profiles):
+                print(f"\n🎯 GENERATING {i+1}/{len(self.profiles)}: {profile['name']}")
                 self.create_browser_logo_icon(profile, icons_folder, timestamp)
+                
+                # Update UI every few icons for better feedback
+                if (i + 1) % 3 == 0:
+                    progress_text = f"Generated {i+1}/{len(self.profiles)} icons..."
+                    self.root.after(0, lambda t=progress_text: self.status_label.config(text=t, fg='#faa61a'))
                 
             # Clear Windows icon cache to force refresh
             try:
                 import subprocess
-                subprocess.run(['ie4uinit.exe', '-show'], shell=True, capture_output=True)
+                subprocess.run(['ie4uinit.exe', '-show'], shell=True, capture_output=True, timeout=5)
                 print("🔄 Refreshed Windows icon cache")
             except:
                 print("⚠️ Could not refresh icon cache")
@@ -452,11 +515,11 @@ class ProfilePop:
             logo_path = os.path.join(os.path.expanduser("~"), "Downloads", "ProfilePop", "logos", logo_file)
             print(f"🔍 Looking for: {logo_path}")
             
-            if os.path.exists(logo_path):
+            # Use cached image loading for better performance
+            logo = self._get_cached_image(logo_path)
+            if logo:
                 try:
-                    # Load and process logo
-                    logo = Image.open(logo_path).convert('RGBA')
-                    print(f"📥 Loaded logo: {logo.size}")
+                    print(f"📥 Loaded logo from cache: {logo.size}")
                     
                     # Calculate size (75% of available space - larger than before)
                     available_size = size - (2 * margin)
@@ -484,19 +547,22 @@ class ProfilePop:
                     
                     # Add text below logo
                     try:
-                        from PIL import ImageFont
-                        # Try to use a nice font
+                        # Use cached font loading for better performance
                         font_size = 20
-                        try:
-                            font = ImageFont.truetype("arial.ttf", font_size)
-                        except:
-                            try:
-                                font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", font_size)
-                            except:
-                                try:
-                                    font = ImageFont.truetype("C:/Windows/Fonts/segoeui.ttf", font_size)
-                                except:
-                                    font = ImageFont.load_default()
+                        font_paths = [
+                            "arial.ttf",
+                            "C:/Windows/Fonts/arial.ttf", 
+                            "C:/Windows/Fonts/segoeui.ttf"
+                        ]
+                        
+                        font = None
+                        for font_path in font_paths:
+                            font = self._get_cached_font(font_path, font_size)
+                            if font:
+                                break
+                        
+                        if not font and ImageFont:
+                            font = ImageFont.load_default()
                         
                         # Get text dimensions
                         bbox = draw.textbbox((0, 0), profile_name, font=font)
@@ -533,12 +599,22 @@ class ProfilePop:
         # Create multi-size ICO with proper taskbar sizing
         sizes = [(16, 16), (20, 20), (24, 24), (32, 32), (40, 40), (48, 48), (64, 64), (96, 96), (128, 128), (256, 256)]
         icons = []
+        
+        # Pre-calculate resampling to avoid repeated operations
+        base_img = img
         for target_size in sizes:
             if target_size == (256, 256):
-                icons.append(img)
+                icons.append(base_img)
             else:
-                # Use high-quality resampling for all sizes
-                resized = img.resize(target_size, Image.Resampling.LANCZOS)
+                # Use high-quality resampling - cache intermediate sizes
+                cache_key = f"resize_{target_size[0]}x{target_size[1]}"
+                if cache_key in self._image_cache:
+                    resized = self._image_cache[cache_key]
+                else:
+                    resized = base_img.resize(target_size, Image.Resampling.LANCZOS)
+                    # Cache smaller sizes for potential reuse
+                    if target_size[0] <= 64:
+                        self._image_cache[cache_key] = resized
                 icons.append(resized)
         
         img.save(icon_path, format='ICO', sizes=[(icon.width, icon.height) for icon in icons])
