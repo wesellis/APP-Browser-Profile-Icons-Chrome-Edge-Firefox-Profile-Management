@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Browser Profile Icons Pro",
-  "version": "2.0.0",
-  "description": "Customize browser profile icons with themes, sync, and advanced features",
+  "version": "3.0.0",
+  "description": "Advanced browser profile management with custom icons, themes, cloud sync, and automation",
   "author": "Wesley Ellis",
   "homepage_url": "https://github.com/wesellis/browser-profile-icons",
   
@@ -10,13 +10,23 @@
     "storage",
     "tabs",
     "identity",
-    "management"
+    "management",
+    "contextMenus",
+    "notifications",
+    "alarms",
+    "bookmarks"
+  ],
+  
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
   ],
   
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "images/icon16.png",
+      "32": "images/icon32.png",
       "48": "images/icon48.png",
       "128": "images/icon128.png"
     }
@@ -24,39 +34,86 @@
   
   "icons": {
     "16": "images/icon16.png",
+    "32": "images/icon32.png",
     "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "128": "images/icon128.png",
+    "256": "images/icon256.png"
   },
   
   "background": {
-    "service_worker": "js/background.js"
+    "service_worker": "js/background.js",
+    "type": "module"
   },
   
   "options_page": "options.html",
   
   "content_scripts": [{
-    "matches": ["chrome://newtab/"],
+    "matches": ["<all_urls>"],
     "js": ["js/content.js"],
+    "css": ["css/content.css"],
     "run_at": "document_start"
   }],
   
   "web_accessible_resources": [{
-    "resources": ["images/*", "css/*"],
+    "resources": ["images/*", "css/*", "fonts/*"],
     "matches": ["<all_urls>"]
   }],
   
   "commands": {
     "switch-profile-1": {
       "suggested_key": {
-        "default": "Ctrl+Shift+1"
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
       },
       "description": "Switch to Profile 1"
     },
     "switch-profile-2": {
       "suggested_key": {
-        "default": "Ctrl+Shift+2"
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
       },
       "description": "Switch to Profile 2"
+    },
+    "switch-profile-3": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+3",
+        "mac": "Command+Shift+3"
+      },
+      "description": "Switch to Profile 3"
+    },
+    "switch-profile-4": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+4",
+        "mac": "Command+Shift+4"
+      },
+      "description": "Switch to Profile 4"
+    },
+    "switch-profile-5": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+5",
+        "mac": "Command+Shift+5"
+      },
+      "description": "Switch to Profile 5"
+    },
+    "quick-switch": {
+      "suggested_key": {
+        "default": "Alt+P",
+        "mac": "Alt+P"
+      },
+      "description": "Quick profile switcher"
+    },
+    "create-profile": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+N",
+        "mac": "Command+Shift+N"
+      },
+      "description": "Create new profile"
     }
+  },
+  
+  "offline_enabled": true,
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
   }
 }

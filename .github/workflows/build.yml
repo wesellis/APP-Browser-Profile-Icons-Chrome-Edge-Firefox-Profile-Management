@@ -1,0 +1,159 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build executable
+      run: python build_modern.py
+    
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ProfilePop-Windows
+        path: releases/ProfilePop_Windows.exe
+
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build executable
+      run: python build_modern.py
+    
+    - name: Upload macOS artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ProfilePop-macOS
+        path: releases/ProfilePop_macOS.app
+
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-tk python3-pil python3-pil.imagetk
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build executable
+      run: python build_modern.py
+    
+    - name: Upload Linux artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ProfilePop-Linux
+        path: releases/ProfilePop_Linux
+
+  build-chrome-extension:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Package Chrome Extension
+      run: |
+        cd chrome-extension
+        zip -r ../ProfilePop-ChromeExtension.zip .
+    
+    - name: Upload Chrome Extension
+      uses: actions/upload-artifact@v3
+      with:
+        name: ProfilePop-ChromeExtension
+        path: ProfilePop-ChromeExtension.zip
+
+  create-release:
+    needs: [build-windows, build-macos, build-linux, build-chrome-extension]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ProfilePop-Windows/ProfilePop_Windows.exe
+          ProfilePop-macOS/ProfilePop_macOS.app
+          ProfilePop-Linux/ProfilePop_Linux
+          ProfilePop-ChromeExtension/ProfilePop-ChromeExtension.zip
+        body: |
+          # ProfilePop Modern v3.0.0
+          
+          ## 🚀 What's New
+          - Modern CustomTkinter UI with dark/light themes
+          - Cross-platform support (Windows, macOS, Linux)
+          - Enhanced Chrome extension with 7 keyboard shortcuts
+          - Cloud sync and auto-switching features
+          - Live preview and gradient support
+          - Advanced security and privacy features
+          
+          ## 📦 Downloads
+          - **Windows**: ProfilePop_Windows.exe
+          - **macOS**: ProfilePop_macOS.app
+          - **Linux**: ProfilePop_Linux
+          - **Chrome Extension**: ProfilePop-ChromeExtension.zip
+          
+          ## 📝 Installation
+          See README for detailed installation instructions.
+          
+          ## 🙏 Thank You
+          Thanks to all contributors and users for your support!
+        draft: false
+        prerelease: false
