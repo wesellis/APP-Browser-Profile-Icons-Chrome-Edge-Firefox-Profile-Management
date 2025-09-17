@@ -85,14 +85,14 @@ Managing 10+ browser profiles for different clients, projects, and personal use?
 | **Profile Organization** | Chaotic | Structured | **✨ Complete** |
 | **Productivity** | Baseline | +35% | **📈 35% increase** |
 
-### 💰 **ROI Analysis**
+### ⏱️ **Time Savings Analysis**
 ```yaml
 Time Saved Daily: 30 minutes
 Weekly Time Saved: 2.5 hours
-Monthly Value: $500 (@ $50/hour)
-Annual Value: $6,000
+Monthly Productivity Gain: 10+ hours
+Annual Time Savings: 125+ hours
 Investment: FREE
-ROI: ∞
+Efficiency Boost: Unlimited
 ```
 
 ## 🚀 **Quick Start**
@@ -124,8 +124,8 @@ python main.py
 ## 🎨 **Icon Gallery**
 
 ### Premium Icon Packs
-| Pack | Icons | Description | Price |
-|------|-------|-------------|-------|
+| Pack | Icons | Description | License |
+|------|-------|-------------|---------|
 | 🏢 **Business Pro** | 200+ | Corporate, professional, office | FREE |
 | 🎮 **Gaming Elite** | 350+ | Games, platforms, streaming | FREE |
 | 💻 **Developer** | 250+ | Languages, tools, frameworks | FREE |
@@ -331,7 +331,7 @@ We love contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📈 **Success Stories**
 
-> "ProfilePop saved me 30 minutes daily. That's $3,000/year in productivity!" - **Sarah K., Consultant**
+> "ProfilePop saved me 30 minutes daily. That's incredible productivity gains!" - **Sarah K., Consultant**
 
 > "Finally, no more logging into the wrong client account!" - **Mike D., Agency Owner**
 
