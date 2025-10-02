@@ -1,9 +1,17 @@
 # Browser Profile Icon Generator
 
-A simple tool for creating custom icons for browser profiles in Chrome, Edge, and Firefox.
+A tool for creating custom icons for browser profiles in Chrome, Edge, and Firefox.
 
-![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+[![Python](https://img.shields.io/badge/Python-3.7+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/wesellis/APP-Browser-Profile-Icons-Chrome-Edge-Firefox-Profile-Management?style=flat-square)](https://github.com/wesellis/APP-Browser-Profile-Icons-Chrome-Edge-Firefox-Profile-Management/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/wesellis/APP-Browser-Profile-Icons-Chrome-Edge-Firefox-Profile-Management?style=flat-square)](https://github.com/wesellis/APP-Browser-Profile-Icons-Chrome-Edge-Firefox-Profile-Management/commits)
+
+---
+
+## Screenshot
+
+![Browser Profile Icon Generator](docs/images/ProfilePop%20-%20Browser%20Profile%20Icon%20Generator%20-%20Main%20Window.png)
 
 ---
 
