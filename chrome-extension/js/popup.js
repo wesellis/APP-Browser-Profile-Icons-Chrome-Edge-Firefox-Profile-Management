@@ -1,48 +1,33 @@
-// Browser Profile Icons Pro - Popup Script
-const FREE_PROFILE_LIMIT = 5;
-const PRO_PRICE = 4.99;
-const CHROME_STORE_URL = 'https://chrome.google.com/webstore/detail/YOUR_EXTENSION_ID';
+// Browser Profile Icons - Chrome Popup Script
+// Simplified version without Pro features
 
 class ProfileManager {
   constructor() {
     this.profiles = [];
-    this.isPro = false;
     this.init();
   }
 
   async init() {
     await this.loadProfiles();
-    await this.checkProStatus();
     this.render();
     this.attachEventListeners();
   }
 
   async loadProfiles() {
-    const result = await chrome.storage.sync.get(['profiles']);
-    this.profiles = result.profiles || this.getDefaultProfiles();
-  }
-
-  async checkProStatus() {
-    const result = await chrome.storage.sync.get(['isPro', 'licenseKey']);
-    this.isPro = result.isPro || false;
-    
-    // Check with license server
-    if (result.licenseKey) {
-      this.isPro = await this.validateLicense(result.licenseKey);
+    try {
+      const result = await chrome.storage.local.get(['profiles']);
+      this.profiles = result.profiles || this.getDefaultProfiles();
+    } catch (error) {
+      console.error('Error loading profiles:', error);
+      this.profiles = this.getDefaultProfiles();
     }
-  }
-
-  async validateLicense(key) {
-    // In production, validate with your server
-    // For now, simple check
-    return key && key.length === 24;
   }
 
   getDefaultProfiles() {
     return [
-      { id: 1, name: 'Work', icon: '💼', color: '#2196F3' },
-      { id: 2, name: 'Personal', icon: '🏠', color: '#4CAF50' },
-      { id: 3, name: 'Development', icon: '💻', color: '#FF9800' }
+      { id: 1, name: 'Work', icon: '💼', color: '#2196F3', created: new Date().toISOString() },
+      { id: 2, name: 'Personal', icon: '🏠', color: '#4CAF50', created: new Date().toISOString() },
+      { id: 3, name: 'Development', icon: '💻', color: '#FF9800', created: new Date().toISOString() }
     ];
   }
 
@@ -50,10 +35,20 @@ class ProfileManager {
     const container = document.getElementById('profiles');
     container.innerHTML = '';
 
-    this.profiles.forEach((profile, index) => {
-      const profileEl = this.createProfileElement(profile, index);
-      container.appendChild(profileEl);
-    });
+    if (this.profiles.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📂</div>
+          <p>No profiles yet</p>
+          <p style="font-size: 12px; margin-top: 5px;">Click "+ Add Profile" to get started</p>
+        </div>
+      `;
+    } else {
+      this.profiles.forEach((profile, index) => {
+        const profileEl = this.createProfileElement(profile, index);
+        container.appendChild(profileEl);
+      });
+    }
 
     this.updateUI();
   }
@@ -65,11 +60,11 @@ class ProfileManager {
       <span class="profile-icon" style="background-color: ${profile.color}">${profile.icon}</span>
       <span class="profile-name">${profile.name}</span>
       <div class="profile-actions">
-        <button class="edit-btn" data-id="${profile.id}">✏️</button>
-        <button class="delete-btn" data-id="${profile.id}">🗑️</button>
+        <button class="edit-btn" data-id="${profile.id}" title="Edit">✏️</button>
+        <button class="delete-btn" data-id="${profile.id}" title="Delete">🗑️</button>
       </div>
     `;
-    
+
     div.addEventListener('click', (e) => {
       if (!e.target.closest('.profile-actions')) {
         this.switchProfile(profile);
@@ -81,23 +76,8 @@ class ProfileManager {
 
   updateUI() {
     const count = this.profiles.length;
-    const limitReached = !this.isPro && count >= FREE_PROFILE_LIMIT;
-    
-    document.getElementById('profileCount').textContent = 
-      this.isPro ? `${count} profiles` : `${count}/${FREE_PROFILE_LIMIT} profiles`;
-    
-    document.getElementById('freeLimit').style.display = 
-      limitReached ? 'block' : 'none';
-    
-    document.getElementById('addProfile').disabled = limitReached;
-    
-    // Update pro features
-    document.querySelectorAll('.pro-feature').forEach(el => {
-      el.disabled = !this.isPro;
-      if (!this.isPro) {
-        el.title = 'Pro feature - Upgrade to unlock';
-      }
-    });
+    document.getElementById('profileCount').textContent =
+      count === 1 ? '1 profile' : `${count} profiles`;
   }
 
   attachEventListeners() {
@@ -105,12 +85,8 @@ class ProfileManager {
       this.addProfile();
     });
 
-    document.getElementById('upgradePro').addEventListener('click', () => {
-      this.upgradeToPro();
-    });
-
-    document.getElementById('syncProfiles').addEventListener('click', () => {
-      this.syncProfiles();
+    document.getElementById('importProfiles').addEventListener('click', () => {
+      this.importProfiles();
     });
 
     document.getElementById('settings').addEventListener('click', () => {
@@ -130,11 +106,6 @@ class ProfileManager {
   }
 
   async addProfile() {
-    if (!this.isPro && this.profiles.length >= FREE_PROFILE_LIMIT) {
-      this.showUpgradePrompt();
-      return;
-    }
-
     const name = prompt('Profile name:');
     if (!name) return;
 
@@ -142,7 +113,8 @@ class ProfileManager {
       id: Date.now(),
       name: name,
       icon: this.getRandomEmoji(),
-      color: this.getRandomColor()
+      color: this.getRandomColor(),
+      created: new Date().toISOString()
     };
 
     this.profiles.push(profile);
@@ -172,108 +144,91 @@ class ProfileManager {
 
   async switchProfile(profile) {
     // Send message to background script
-    chrome.runtime.sendMessage({
-      action: 'switchProfile',
-      profile: profile
-    });
-    
-    // Visual feedback
-    const feedback = document.createElement('div');
-    feedback.className = 'switch-feedback';
-    feedback.textContent = `Switched to ${profile.name}`;
-    document.body.appendChild(feedback);
-    
-    setTimeout(() => {
-      feedback.remove();
-      window.close();
-    }, 1000);
-  }
-
-  async syncProfiles() {
-    if (!this.isPro) {
-      this.showUpgradePrompt();
-      return;
-    }
-
-    // Sync with cloud storage
     try {
-      const response = await fetch('https://api.profileicons.com/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await this.getLicenseKey()}`
-        },
-        body: JSON.stringify({ profiles: this.profiles })
+      await chrome.runtime.sendMessage({
+        action: 'switchProfile',
+        profile: profile
       });
 
-      if (response.ok) {
-        this.showMessage('Profiles synced!');
-      }
+      // Visual feedback
+      const feedback = document.createElement('div');
+      feedback.className = 'switch-feedback';
+      feedback.textContent = `Switched to ${profile.name}`;
+      document.body.appendChild(feedback);
+
+      // Update last used
+      profile.lastUsed = new Date().toISOString();
+      await this.saveProfiles();
+
+      setTimeout(() => {
+        feedback.remove();
+        window.close();
+      }, 1000);
     } catch (error) {
-      console.error('Sync failed:', error);
-      this.showMessage('Sync failed. Please try again.');
+      console.error('Error switching profile:', error);
     }
   }
 
-  async upgradeToPro() {
-    // Open Chrome Web Store or payment page
-    chrome.tabs.create({
-      url: `${CHROME_STORE_URL}?sku=pro_upgrade`
-    });
-  }
+  async importProfiles() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
 
-  showUpgradePrompt() {
-    const modal = document.createElement('div');
-    modal.className = 'upgrade-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h2>Upgrade to Pro</h2>
-        <ul>
-          <li>✅ Unlimited profiles</li>
-          <li>✅ Cloud sync across devices</li>
-          <li>✅ Custom themes & icons</li>
-          <li>✅ Keyboard shortcuts</li>
-          <li>✅ Priority support</li>
-        </ul>
-        <button class="upgrade-btn" onclick="profileManager.upgradeToPro()">
-          Upgrade for $${PRO_PRICE}
-        </button>
-        <button class="cancel-btn" onclick="this.parentElement.parentElement.remove()">
-          Maybe later
-        </button>
-      </div>
-    `;
-    document.body.appendChild(modal);
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          if (data.profiles && Array.isArray(data.profiles)) {
+            this.profiles = data.profiles;
+            await this.saveProfiles();
+            this.render();
+            this.showMessage('Profiles imported successfully!');
+          }
+        } catch (error) {
+          console.error('Error importing profiles:', error);
+          alert('Error importing profiles. Please check the file format.');
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    input.click();
   }
 
   async saveProfiles() {
-    await chrome.storage.sync.set({ profiles: this.profiles });
-  }
-
-  async getLicenseKey() {
-    const result = await chrome.storage.sync.get(['licenseKey']);
-    return result.licenseKey;
+    try {
+      await chrome.storage.local.set({ profiles: this.profiles });
+    } catch (error) {
+      console.error('Error saving profiles:', error);
+    }
   }
 
   getRandomEmoji() {
-    const emojis = ['🎯', '🚀', '💡', '🎨', '📊', '🔧', '📚', '🎮', '🎵', '🏃'];
+    const emojis = ['🎯', '🚀', '💡', '🎨', '📊', '🔧', '📚', '🎮', '🎵', '🏃', '🌟', '🔥', '⚡', '🎪', '🎭'];
     return emojis[Math.floor(Math.random() * emojis.length)];
   }
 
   getRandomColor() {
-    const colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', 
-                    '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50'];
+    const colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5',
+                    '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50',
+                    '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722'];
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
   showMessage(text) {
     const msg = document.createElement('div');
-    msg.className = 'message';
+    msg.className = 'switch-feedback';
     msg.textContent = text;
     document.body.appendChild(msg);
-    setTimeout(() => msg.remove(), 3000);
+    setTimeout(() => msg.remove(), 2000);
   }
 }
 
 // Initialize
-const profileManager = new ProfileManager();
+document.addEventListener('DOMContentLoaded', () => {
+  new ProfileManager();
+});

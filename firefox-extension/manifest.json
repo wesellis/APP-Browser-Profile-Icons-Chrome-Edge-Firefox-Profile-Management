@@ -1,0 +1,76 @@
+{
+  "manifest_version": 2,
+  "name": "Browser Profile Icon Manager",
+  "version": "3.0.0",
+  "description": "Manage browser profiles with custom icons, colors, and quick switching",
+  "author": "Wesley Ellis",
+  "homepage_url": "https://github.com/wesellis/browser-profile-icons",
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "contextMenus",
+    "notifications"
+  ],
+
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "commands": {
+    "switch-profile-1": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1"
+      },
+      "description": "Switch to Profile 1"
+    },
+    "switch-profile-2": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2"
+      },
+      "description": "Switch to Profile 2"
+    },
+    "switch-profile-3": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+3"
+      },
+      "description": "Switch to Profile 3"
+    },
+    "quick-switch": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Quick profile switcher"
+    }
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "profile-icons@wesellis.com",
+      "strict_min_version": "57.0"
+    }
+  }
+}
