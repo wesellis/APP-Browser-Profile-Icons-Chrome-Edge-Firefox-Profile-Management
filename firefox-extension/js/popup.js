@@ -93,6 +93,11 @@ class ProfileManager {
       browser.runtime.openOptionsPage();
     });
 
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      this.filterProfiles(e.target.value);
+    });
+
     // Profile action listeners
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('edit-btn')) {
@@ -103,6 +108,40 @@ class ProfileManager {
         this.deleteProfile(id);
       }
     });
+  }
+
+  filterProfiles(searchTerm) {
+    const term = searchTerm.toLowerCase();
+    const profileElements = document.querySelectorAll('.profile');
+
+    profileElements.forEach(el => {
+      const name = el.querySelector('.profile-name').textContent.toLowerCase();
+      if (name.includes(term)) {
+        el.style.display = 'flex';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+
+    // Show empty state if no results
+    const visibleProfiles = Array.from(profileElements).filter(el => el.style.display !== 'none');
+    const emptyState = document.querySelector('.empty-state');
+
+    if (visibleProfiles.length === 0 && term !== '') {
+      if (!emptyState) {
+        const container = document.getElementById('profiles');
+        container.innerHTML += `
+          <div class="empty-state search-empty">
+            <div class="empty-state-icon">🔍</div>
+            <p>No profiles found</p>
+            <p style="font-size: 12px; margin-top: 5px;">Try a different search term</p>
+          </div>
+        `;
+      }
+    } else {
+      const searchEmpty = document.querySelector('.search-empty');
+      if (searchEmpty) searchEmpty.remove();
+    }
   }
 
   async addProfile() {
