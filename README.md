@@ -102,6 +102,60 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
+## Project Status & Roadmap
+
+**Completion: ~75%**
+
+### What Works
+- ✅ Desktop icon generator (Python GUI)
+- ✅ Chrome extension with basic profile switching
+- ✅ Icon customization (shapes, colors, text, effects)
+- ✅ Multiple shape options (circle, rounded, square, hexagon, badge)
+- ✅ Visual effects (shadows, glow, borders, opacity)
+- ✅ Cross-platform support (Windows, Mac, Linux paths)
+- ✅ Settings persistence and profile management
+- ✅ Build scripts for creating executables
+
+### Known Limitations & Missing Features
+
+**Browser Support:**
+- ⚠️ **Firefox Extension**: Not yet implemented (claimed in project name but Chrome-only currently)
+- ⚠️ **Edge Support**: Should work with Chrome extension but not explicitly tested
+- ⚠️ **Profile automation**: Chrome extension manifest lists automation features that may not be fully implemented
+
+**Advanced Features:**
+- ⚠️ **Cloud Sync**: Listed in extension permissions but functionality not implemented
+- ⚠️ **Profile Import/Export**: UI exists but may not be fully functional
+- ⚠️ **Keyboard Shortcuts**: Defined in manifest but need testing
+- ⚠️ **Icon Gallery/Templates**: Catalog exists but no built-in template library
+
+**Code Quality:**
+- ⚠️ **Testing**: No test suite despite pytest in requirements
+- ⚠️ **Documentation**: Installation guide exists but could be more comprehensive
+- ⚠️ **Error Handling**: Basic logging exists but needs more robust error recovery
+- ⚠️ **Async Functions**: Uses async/await but may not be fully utilized
+
+### What Needs Work
+
+1. **Firefox Extension Development** - Create Firefox-compatible version
+2. **Comprehensive Testing** - Add unit tests and integration tests
+3. **Profile Synchronization** - Implement cloud sync functionality
+4. **Better Documentation** - Step-by-step guides for all browsers
+5. **Template Library** - Add pre-made icon templates/themes
+6. **Edge-Specific Features** - Test and document Edge compatibility
+7. **Error Recovery** - Better handling of browser path detection failures
+8. **Performance Optimization** - Profile icon generation caching and optimization
+
+### Contributing
+
+If you'd like to help complete any of the missing features above, contributions are welcome. Priority areas:
+1. Firefox extension development
+2. Writing tests (pytest)
+3. Improving documentation
+4. Adding icon templates
+
+---
+
 **Author:** Wesley Ellis
-**Note:** This is a utility tool for personal use. No guarantees or warranties provided.
+**Note:** This is a utility tool for personal use. Core functionality works, but some advanced features are incomplete. No guarantees or warranties provided.
 
